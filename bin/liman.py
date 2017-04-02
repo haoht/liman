@@ -4,7 +4,6 @@ import os
 import sys
 import shutil
 
-
 def handler(action, name):
 
     if action == 'list':
@@ -25,8 +24,8 @@ def handler(action, name):
 
 def add(name):
     # Creating repository folder with right permissions
-    os.system('mkdir -p /usr/local/liman2/' + str(name))
-    os.chdir('/usr/local/liman2/' + str(name))
+    os.system('mkdir -p /usr/local/liman/' + str(name))
+    os.chdir('/usr/local/liman/' + str(name))
 
     # Initializing git and enabling sparse checkout
     os.system('git init && git remote add origin https://github.com/' + str(name.replace('#', '/')) + '.git ')
@@ -39,13 +38,13 @@ def add(name):
 
 def update():
     # First get list of repositories initialized
-    repos = os.listdir('/usr/local/liman2')
+    repos = os.listdir('/usr/local/liman')
 
     for current in repos:
         # Updating repository with sparsecheckout
-        os.chdir('/usr/local/liman2/' + str(current))
+        os.chdir('/usr/local/liman/' + str(current))
         os.system('git pull --depth=2 origin master')
-        os.chmod('/usr/local/liman2/' + str(current) + '/scripts/', 744)
+        os.chmod('/usr/local/liman/' + str(current) + '/scripts/', 744)
         print(str(current) + ' updated!')
     print('All repositories updated.')
 
@@ -53,13 +52,13 @@ def update():
 def remove(name):
     # Simply removing folder
     name = name.replace('/', '#')
-    shutil.rmtree('/usr/local/liman2/' + str(name))
+    shutil.rmtree('/usr/local/liman/' + str(name))
     print(str(name) + ' removed!')
 
 
 def listall():
     # Listing files in all directories (repositories) under liman2.
-    os.chdir('/usr/local/liman2/')
+    os.chdir('/usr/local/liman/')
     os.system('find . -iname *.sh')
 
 
@@ -68,12 +67,12 @@ def run(name):
     name = str(name) + '.sh' if not name.endswith('.sh') else name
 
     # Give permission to run the script
-    os.chmod('/usr/local/liman2/liman2#liman2-depo/scripts/' + str(name), 100)
-    os.system('bash /usr/local/liman2/liman2#liman2-depo/scripts/' + str(name))
+    os.chmod('/usr/local/liman/liman#liman-depo/scripts/' + str(name), 100)
+    os.system('bash /usr/local/liman/liman#liman-depo/scripts/' + str(name))
 
 
 def repositories():
-    repos = os.listdir('/usr/local/liman2')
+    repos = os.listdir('/usr/local/liman')
 
     for current in repos:
         print(current)
