@@ -9,7 +9,7 @@ fi
 
 cp bin/liman.py /usr/bin/liman
 chmod +x /usr/bin/liman
-mkdir -p /usr/local/liman/
+mkdir -p /usr/local/share/liman/
 
 echo "Let's install default repositories as well"
 liman add liman/liman-depo
