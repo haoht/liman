@@ -41,7 +41,7 @@ if [ "$(which git)" == "" ]; then
 fi
 
 #Copying binary into /usr/bin for global access to command.
-mv bin/liman.py /usr/bin/liman
+mv liman.py /usr/bin/liman
 chmod +x /usr/bin/liman
 
 #Preparing liman with default repository
