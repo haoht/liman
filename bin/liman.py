@@ -20,12 +20,13 @@ def handler(action, name):
     elif action == 'run':
         run(name)
     else:
-        print('Command not found')
+        print('Command not found, available commands are : \nlist, update, '
+              'repos, add, remove, run')
 
 
 def add(name):
     # Creating repository folder with right permissions
-    os.system('sudo su')
+
     os.system('mkdir -p /usr/local/share/liman/' + str(name))
     os.chdir('/usr/local/share/liman/' + str(name))
 
@@ -54,7 +55,7 @@ def update():
 
 def remove(name):
     # Simply removing folder
-    os.system('sudo su')
+
     name = name.replace('/', '#')
     shutil.rmtree('/usr/local/share/liman/' + str(name))
     os.system('exit')
@@ -63,10 +64,11 @@ def remove(name):
 
 def listall():
     # Listing files in all directories (repositories) under liman.
-    os.system('sudo su')
+
     os.chdir('/usr/local/share/liman/')
     os.system('find . -iname *.sh')
     os.system('exit')
+
 
 def run(name):
     # Basic if statement to add .sh extension to the name
