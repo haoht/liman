@@ -73,7 +73,7 @@ def run(name):
     name = str(name) + '.sh' if not name.endswith('.sh') else name
 
     # Give permission to run the script
-    os.system('sh /usr/local/share/liman/liman#liman-depo/scripts/' + str(name))
+    os.system('sh /usr/local/share/liman/*/scripts/' + str(name))
 
 
 def repositories():
