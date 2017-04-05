@@ -47,6 +47,6 @@ chmod +x /usr/bin/liman
 #Preparing liman with default repository
 mkdir -p /usr/local/share/liman/
 echo "Installing default repositories"
-liman add liman/liman-depo
+liman add liman/ldepo
 
 echo "Liman installed, default repository added"
