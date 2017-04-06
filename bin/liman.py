@@ -3,8 +3,8 @@
 import os
 import sys
 import shutil
-import json
-import StringIO
+import glob
+
 
 def handler(action, name):
     if action == 'list':
@@ -23,19 +23,13 @@ def handler(action, name):
         install(name)
     elif action == 'log':
         log()
+    elif action == 'installed':
+        installed()
+    elif action == 'search':
+        search(name)
     else:
         print('Command not found, available commands are : \nlist, update, '
-              'repos, add, remove, run, install, log')
-
-
-if len(sys.argv) > 3:
-    print('Too many arguments')
-elif len(sys.argv) > 2:
-    handler(sys.argv[1], str(sys.argv[2]).replace('/', '#'))
-elif len(sys.argv) > 1:
-    handler(sys.argv[1], '')
-else:
-    print('Please deploy an action')
+              'repos, add, remove, run, install, log, installed')
 
 
 def log():
@@ -89,6 +83,13 @@ def listall():
     os.system('exit')
 
 
+def installed():
+    # List the scripts under installed folder
+    scriptlist = os.listdir('/usr/local/share/liman/installed')
+    for script in scriptlist:
+        print(script[:-3])
+
+
 def install(name):
     # Let's create the installed folder
     try:
@@ -108,11 +109,11 @@ def install(name):
         for script in scriptlist:
             print(script)
             if script == str(name) + '.sh':
-                found = True
                 shutil.copyfile('/usr/local/share/liman/repos/' + str(current) + '/scripts/' + str(script),
                                 '/usr/local/share/liman/installed/' + str(name) + '.sh')
                 print(str(name) + ' is installed.')
                 run(name)
+                found = True
     if not found:
         print(str(name) + ' is not found.')
 
@@ -122,8 +123,8 @@ def run(name):
     name = str(name) + '.sh' if not name.endswith('.sh') else name
 
     # Check if file exist
-    if os.path.isfile('/usr/local/share/liman/installed/' + str(name) + '.sh'):
-        os.system('sh /usr/local/share/liman/installed' + str(name) + '.sh')
+    if os.path.isfile('/usr/local/share/liman/installed/' + str(name)):
+        os.system('sh /usr/local/share/liman/installed/' + str(name))
     else:
         print('File not found or not installed')
 
@@ -134,14 +135,36 @@ def repositories():
         print(current)
 
 
+def search(name):
+    name = str(name[:3]) if name.endswith('.sh') else name
+    repos = os.listdir('/usr/local/share/liman/repos')
+    for current in repos:
+        scriptlist = os.listdir('/usr/local/share/liman/repos/' + str(current)
+                                + '/scripts/')
+        for script in scriptlist:
+            if name in script:
+                print('/usr/local/share/liman/repos/' + str(current) + '/' +
+                      script)
+
+
 def readdb(reponame):
     if not os.path.isfile('/usr/local/share/liman/db/repo.json'):
         index = open('/usr/local/share/liman/db/' + reponame + '.json')
     print(index)
 
 
-def createdb(type):
-    if type == 'repolist':
-        print('')
-    elif type.startswith('repo:'):
-        print('')
+# def creatmedb(type):
+#     if type == 'repolist':
+#         print('')
+#     elif type.startswith('repo:'):
+#         print('')
+
+
+if len(sys.argv) > 3:
+    print('Too many arguments')
+elif len(sys.argv) > 2:
+    handler(sys.argv[1], str(sys.argv[2]).replace('/', '#'))
+elif len(sys.argv) > 1:
+    handler(sys.argv[1], '')
+else:
+    print('Please deploy an action')
