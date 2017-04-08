@@ -100,11 +100,14 @@ def update(name):
         if current == name or name == '':
             # Updating repository with sparsecheckout
             os.chdir('/usr/local/share/liman/repos/' + str(current))
-            os.system('git pull --depth=2 origin master')
+            os.system('git pull --depth=2 origin master --allow-unrelated-histories')
             os.system('chmod -R o=rx /usr/local/share/liman/repos/' + str(current) + '/scripts/*')
-            # os.chmod('/usr/local/share/liman/repos/' + str(current) + '/scripts/', 755)
-            print(str(current) + ' updated!')
-    permission(name)
+            if not os.path.isdir('/usr/local/share/liman/repos/' + str(current) + '/scripts'):
+                print('Invalid repository, deleting now.')
+                remove_repository(current)
+            else:
+                print(str(current) + ' updated!')
+                permission(current)
 
 
 def remove_repository(name):
