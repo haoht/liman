@@ -22,8 +22,8 @@ def handler(action, name):
         add(name)
     elif action == 'remove-repository':
         remove_repository(name)
-    elif action == 'remove-script':
-        remove_script(name)
+    elif action == 'remove':
+        remove(name)
     elif action == 'install':
         install(name)
     elif action == 'installed':
@@ -121,13 +121,14 @@ def remove_repository(name):
     print(str(name) + ' removed!')
 
 
-def remove_script(name):
+def remove(name):
     # Check if user is root, otherwise it can't work.
     if not root():
         sys.exit('You must run Liman as root')
     if name == '':
         sys.exit('You must write script name')
-    name = name + '.sh'
+    if name.startswith('l-'):
+        name = name[2:]
     os.remove('/usr/local/share/liman/installed/' + str(name) + '.sh')
     os.remove('/usr/bin/l-' + str(name))
     print(str(name) + ' removed.')
@@ -167,6 +168,8 @@ def install(name):
     location = search(name)
     if not location:
         sys.exit()
+    if not name.endswith('.sh'):
+        name = name + '.sh'
     shutil.copyfile(location, '/usr/local/share/liman/installed/' + str(name))
     os.system('ln -sf ' + str(location) + ' /usr/bin/l-' + str(name[:-3]))
     os.system('chmod +x /usr/bin/l-' + str(name[:-3]))
