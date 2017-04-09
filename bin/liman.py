@@ -147,8 +147,11 @@ def scriptslist():
     for repo in repos:
         scripts = os.listdir('/usr/local/share/liman/repos/' + str(repo) + '/scripts/')
         for script in scripts:
-            print(str(script) + ' > ' + details('/usr/local/share/liman/repos/'
-                                                + str(repo) + '/scripts/' + str(script), 2))
+            description = details('/usr/local/share/liman/repos/'
+                                                + str(repo) + '/scripts/' + str(script), 3)[14:]
+            if script.endswith('.sh'):
+                script = script[:-3]
+            print(str(script) + ' > ' + description)
 
 
 def installed():
