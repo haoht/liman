@@ -22,7 +22,7 @@ else
 fi
 
 #Download the liman python file
-#limanLocation="https://raw.githubusercontent.com/liman/liman/master/bin/liman.py"
+limanLocation="https://raw.githubusercontent.com/liman/liman/master/bin/liman.py"
 if [ "$isLinux" = true ]; then
     wget "$limanLocation"
 else
@@ -41,7 +41,7 @@ if [ "$(which git)" == "" ]; then
 fi
 
 #Copying binary into /usr/bin for global access to command.
-mv bin/liman.py /usr/bin/liman
+mv liman.py /usr/bin/liman
 chmod +x /usr/bin/liman
 
 #Preparing liman with default repository
