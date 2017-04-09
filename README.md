@@ -1,6 +1,7 @@
-# liman
-Liman Script Manager
+# Liman Script Manager
+
+TODO
 
 # Installation
 
-wget -q goo.gl/7TGUqf -O - | bash
+wget -q https://raw.githubusercontent.com/liman/liman/master/install.sh -O - | sudo bash
