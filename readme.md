@@ -1,6 +1,4 @@
-<snippet>
-  <content><![CDATA[
-# ${1:Project Name}
+# LIMAN
 
 TODO
 
@@ -9,7 +7,3 @@ TODO
 ```
 wget -q https://raw.githubusercontent.com/liman/liman/master/install.sh -O - | sudo bash
 ```
-
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
