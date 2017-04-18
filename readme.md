@@ -1,6 +1,9 @@
 # Liman
 
-TODO
+  Liman is not a package manager.
+  It is written in the Python language.
+  Copying, duplication and reuse are very convenient.
+
 
 ## Getting Started
 
@@ -35,6 +38,11 @@ Commands:
   install             # Install new script to the system
   installed           # List of installed scripts in the system
   integrity           # Check and fix problems with liman itself
+```
+### Example
+
+```
+$ sudo liman add liman/ldepo
 ```
 
 ## License
