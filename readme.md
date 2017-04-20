@@ -7,7 +7,7 @@
 
 ### Prerequisites
 
-  Python Language
+  Python Language,
   Git Structure
 
 ### Install
