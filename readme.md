@@ -3,17 +3,12 @@
   Liman is not a package manager.
   It is written in the Python language.
   Copying, duplication and reuse are very convenient.
-
-
-## Getting Started
-
-TODO
-
-## Installation
+  There is a directory structure where scripts are listed and some information is kept.
 
 ### Prerequisites
 
-TODO
+  Python Language
+  Git Structure
 
 ### Install
 
