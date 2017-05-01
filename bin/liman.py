@@ -12,7 +12,7 @@ import platform
 
 BINARY = '/usr/bin/liman'
 DATA_FOLDER = '/usr/local/share/liman/'
-VERSION = '0.2 Alpha'
+VERSION = 'Alpha 0.2'
 
 def main():
     """
@@ -29,18 +29,41 @@ def main():
                    'remove' : [remove, 'Remove installed scripts.'],
                    'install' : [install, 'Install new script to the system.'],
                    'installed' : [installed, 'List of installed scripts in the system.'],
-                   'integrity' : [integrity, 'Check and fix problems with liman itself.']}
+                   'integrity' : [integrity, 'Check and fix problems with liman itself.'],
+                   'help'  : [helpmenu, 'Display the help.']}
     argc = len(sys.argv)
     if not argc > 1:
+        helpmenu()
         sys.exit('Usage: liman <command> [command argument]')
     command = sys.argv[1]
     if not command in commandlist:
+        helpmenu()
         sys.exit('Command not found!')
     if argc > 2:
         name = sys.argv[2].replace('/', '#')
         commandlist[sys.argv[1]][0](name)
     else:
         commandlist[sys.argv[1]][0]()
+
+
+def helpmenu():
+    '''
+        Display the help ( commands ) of the liman.
+    '''
+    commandlist = {'list' : [scriptslist, 'List of scripts in all repositories.'],
+                   'repos' : [repositories, 'List of repositories.'],
+                   'log' : [log, 'Logs of liman.'],
+                   'search' : [search, 'Search recursively in all repositories'],
+                   'update' : [update, 'Update specific repository by name.'],
+                   'add': [add, 'Add new repository to the liman.'],
+                   'remove-repository' : [remove_repository,
+                                          'Remove installed repository from liman.'],
+                   'remove' : [remove, 'Remove installed scripts.'],
+                   'install' : [install, 'Install new script to the system.'],
+                   'installed' : [installed, 'List of installed scripts in the system.'],
+                   'integrity' : [integrity, 'Check and fix problems with liman itself.']}
+    for command in commandlist:
+        print command + '\t\t'  + commandlist[str(command)][1]
 
 
 def log():
@@ -131,7 +154,6 @@ def add(name):
 def update(name):
     """
         Update specific repository.
-        # TODO fix this > If there's no name at all, function will update all repositories
     """
     root()
     # Check if there's any repository or not.

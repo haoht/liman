@@ -40,6 +40,9 @@ if [ "$(which git)" == "" ]; then
     fi
 fi
 
+#Clearing old liman binary.
+rm -f /usr/bin/liman
+
 #Copying binary into /usr/bin for global access to command.
 mv liman.py /usr/bin/liman
 chmod +x /usr/bin/liman
