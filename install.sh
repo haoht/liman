@@ -26,7 +26,7 @@ limanLocation="https://raw.githubusercontent.com/liman/liman/master/bin/liman.py
 if [ "$isLinux" = true ]; then
     wget "$limanLocation"
 else
-    curl "$limanLocation"
+    curl "$limanLocation" > liman.py
 fi
 
 #Check if git installed or not.
