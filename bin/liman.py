@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
     Liman Script Manager
     https://github.com/liman/liman
@@ -12,31 +12,31 @@ import platform
 
 BINARY = '/usr/bin/liman'
 DATA_FOLDER = '/usr/local/share/liman/'
-VERSION = 'Alpha 0.2'
+VERSION = 'Alpha 0.3'
+
 
 def main():
     """
         Main handler for liman.
     """
-    commandlist = {'list' : [scriptslist, 'List of scripts in all repositories.'],
-                   'repos' : [repositories, 'List of repositories.'],
-                   'log' : [log, 'Logs of liman.'],
-                   'search' : [search, 'Search recursively in all repositories'],
-                   'update' : [update, 'Update specific repository by name.'],
+    commandlist = {'list': [scriptslist, 'List of scripts in all repositories.'],
+                   'repos': [repositories, 'List of repositories.'],
+                   'log': [log, 'Logs of liman.'],
+                   'search': [search, 'Search recursively in all repositories'],
+                   'update': [update, 'Update specific repository by name.'],
                    'add': [add, 'Add new repository to the liman.'],
-                   'remove-repository' : [remove_repository,
-                                          'Remove installed repository from liman.'],
-                   'remove' : [remove, 'Remove installed scripts.'],
-                   'install' : [install, 'Install new script to the system.'],
-                   'installed' : [installed, 'List of installed scripts in the system.'],
-                   'integrity' : [integrity, 'Check and fix problems with liman itself.'],
-                   'help'  : [helpmenu, 'Display the help.']}
+                   'remove-repository': [remove_repository,
+                                         'Remove installed repository from liman.'],
+                   'remove': [remove, 'Remove installed scripts.'],
+                   'install': [install, 'Install new script to the system.'],
+                   'installed': [installed, 'List of installed scripts in the system.'],
+                   'integrity': [integrity, 'Check and fix problems with liman itself.']}
     argc = len(sys.argv)
     if not argc > 1:
         helpmenu()
         sys.exit('Usage: liman <command> [command argument]')
     command = sys.argv[1]
-    if not command in commandlist:
+    if command not in commandlist:
         helpmenu()
         sys.exit('Command not found!')
     if argc > 2:
@@ -50,20 +50,20 @@ def helpmenu():
     '''
         Display the help ( commands ) of the liman.
     '''
-    commandlist = {'list' : [scriptslist, 'List of scripts in all repositories.'],
-                   'repos' : [repositories, 'List of repositories.'],
-                   'log' : [log, 'Logs of liman.'],
-                   'search' : [search, 'Search recursively in all repositories'],
-                   'update' : [update, 'Update specific repository by name.'],
+    commandlist = {'list': [scriptslist, 'List of scripts in all repositories.'],
+                   'repos': [repositories, 'List of repositories.'],
+                   'log': [log, 'Logs of liman.'],
+                   'search': [search, 'Search recursively in all repositories'],
+                   'update': [update, 'Update specific repository by name.'],
                    'add': [add, 'Add new repository to the liman.'],
-                   'remove-repository' : [remove_repository,
-                                          'Remove installed repository from liman.'],
-                   'remove' : [remove, 'Remove installed scripts.'],
-                   'install' : [install, 'Install new script to the system.'],
-                   'installed' : [installed, 'List of installed scripts in the system.'],
-                   'integrity' : [integrity, 'Check and fix problems with liman itself.']}
+                   'remove-repository': [remove_repository,
+                                         'Remove installed repository from liman.'],
+                   'remove': [remove, 'Remove installed scripts.'],
+                   'install': [install, 'Install new script to the system.'],
+                   'installed': [installed, 'List of installed scripts in the system.'],
+                   'integrity': [integrity, 'Check and fix problems with liman itself.']}
     for command in commandlist:
-        print command + '\t\t'  + commandlist[str(command)][1]
+        print command + '\t\t' + commandlist[str(command)][1]
 
 
 def log():
@@ -114,6 +114,7 @@ def integrity():
         os.mkdir(DATA_FOLDER)
     print 'Integrity check completed, everything should be ok now :)'
 
+
 def details(name, index):
     """
         Parsing script file' lines for data
@@ -143,7 +144,7 @@ def add(name):
     # Initializing git and enabling sparse checkout
     print 'Adding repository...'
     os.system('git init >> ' + DATA_FOLDER + 'log && git remote add origin https://github.com/'
-              + str(name.replace('#', '/')) + '.git >> ' + DATA_FOLDER +'log')
+            + str(name.replace('#', '/')) + '.git >> ' + DATA_FOLDER +'log')
     os.system('echo \'scripts/*\' >> .git/info/sparse-checkout' +
               '&& git config core.sparsecheckout true ')
 
@@ -179,7 +180,9 @@ def update(name):
 
 
 def remove_repository(name):
-    """Delete repository by simply deleting it's folder"""
+    """
+        Delete repository by simply deleting it's folder
+    """
     root()
     if name == '':
         sys.exit('You must write repository name')
@@ -281,5 +284,6 @@ def search(name):
                 return result
     print str(name) + ' not found.'
     return False
+
 
 main()
