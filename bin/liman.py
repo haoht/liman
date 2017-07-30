@@ -63,7 +63,7 @@ def helpmenu():
                    'installed': [installed, 'List of installed scripts in the system.'],
                    'integrity': [integrity, 'Check and fix problems with liman itself.']}
     for command in commandlist:
-        print command + '\t\t' + commandlist[str(command)][1]
+        print(command + '\t\t' + commandlist[str(command)][1])
 
 
 def log():
@@ -96,15 +96,15 @@ def integrity():
     root()
     # Let's check if there's a binary or user run this from somewhere else
     if not os.path.isfile(BINARY):
-        print 'Copying liman under /usr/bin/'
+        print('Copying liman under /usr/bin/')
         shutil.copy(sys.argv[0], '/usr/bin/liman')
     # Check if liman has run permission
     if not os.access(BINARY, os.X_OK):
-        print 'Fixing liman\' run permission'
+        print('Fixing liman\' run permission')
         os.chmod('/usr/bin/liman', 733)
     # Check if git installed or not.
     if not os.path.isfile('/usr/bin/git'):
-        print 'Git not found, installing...'
+        print('Git not found, installing...')
         if platform.system() == 'Darwin':
             os.system('git')
         else:
@@ -112,7 +112,7 @@ def integrity():
     # Lastly, check if liman data folder exist.
     if not os.path.isdir(DATA_FOLDER):
         os.mkdir(DATA_FOLDER)
-    print 'Integrity check completed, everything should be ok now :)'
+    print('Integrity check completed, everything should be ok now :)')
 
 
 def details(name, index):
@@ -142,9 +142,9 @@ def add(name):
         os.chdir(DATA_FOLDER + 'repos/' + name)
 
     # Initializing git and enabling sparse checkout
-    print 'Adding repository...'
+    print('Adding repository...')
     os.system('git init >> ' + DATA_FOLDER + 'log && git remote add origin https://github.com/'
-            + str(name.replace('#', '/')) + '.git >> ' + DATA_FOLDER +'log')
+              + str(name.replace('#', '/')) + '.git >> ' + DATA_FOLDER +'log')
     os.system('echo \'scripts/*\' >> .git/info/sparse-checkout' +
               '&& git config core.sparsecheckout true ')
 
@@ -162,9 +162,9 @@ def update(name):
         sys.exit('There\'s no repository at all.')
     # First get list of repositories initialized
     repos = os.listdir(DATA_FOLDER + 'repos')
-    print 'Updating repositories'
+    print('Updating repositories')
     for current in repos:
-        print current
+        print(current)
         if current == name or name == '':
             # Updating repository with sparsecheckout
             os.chdir(DATA_FOLDER + 'repos/' + str(current))
@@ -172,10 +172,10 @@ def update(name):
             os.system('git pull --depth=2 origin master')
             os.system('chmod -R o=rx ' + DATA_FOLDER + 'repos/' + str(current) + '/scripts/*')
             if not os.path.isdir(DATA_FOLDER + 'repos/' + str(current) + '/scripts'):
-                print 'Invalid repository, deleting now.'
+                print('Invalid repository, deleting now.')
                 remove_repository(name)
             else:
-                print str(current) + ' updated!'
+                print(str(current) + ' updated!')
                 permission()
 
 
@@ -188,7 +188,7 @@ def remove_repository(name):
         sys.exit('You must write repository name')
     name = name.replace('/', '#')
     shutil.rmtree(DATA_FOLDER + 'repos/' + str(name))
-    print str(name) + ' removed!'
+    print(str(name) + ' removed!')
 
 
 def remove(name):
@@ -200,7 +200,7 @@ def remove(name):
         name = name[2:]
     os.remove(DATA_FOLDER + 'installed/' + str(name) + '.sh')
     os.remove('/usr/bin/l-' + str(name))
-    print str(name) + ' removed.'
+    print(str(name) + ' removed.')
 
 
 def scriptslist():
@@ -214,8 +214,8 @@ def scriptslist():
     for repo in repos:
         scripts = os.listdir(DATA_FOLDER + 'repos/' + str(repo) + '/scripts/')
         for script in scripts:
-            print str(script) + ' > ' + details(DATA_FOLDER +
-                                                'repos/' + str(repo) + '/scripts/' + str(script), 3)
+            print(str(script) + ' > ' + details(DATA_FOLDER +
+                                                'repos/' + str(repo) + '/scripts/' + str(script), 3))
 
 
 def installed():
@@ -227,7 +227,7 @@ def installed():
     # List the scripts under installed folder
     scripts = os.listdir(DATA_FOLDER + 'installed')
     for script in scripts:
-        print 'l-' + script[:-3]
+        print('l-' + script[:-3])
 
 
 def install(name):
@@ -249,7 +249,7 @@ def install(name):
     shutil.copyfile(location, DATA_FOLDER + 'installed/' + str(name))
     os.system('ln -sf ' + str(location) + ' /usr/bin/l-' + str(name[:-3]))
     os.system('chmod +x /usr/bin/l-' + str(name[:-3]))
-    print 'l-' + str(name[:-3]) + ' is installed.'
+    print('l-' + str(name[:-3]) + ' is installed.')
 
 
 def repositories():
@@ -261,7 +261,7 @@ def repositories():
 
     repos = os.listdir(DATA_FOLDER + 'repos')
     for current in repos:
-        print current
+        print(current)
 
 
 def search(name):
@@ -280,9 +280,9 @@ def search(name):
             if script in name:
                 result = DATA_FOLDER + 'repos/' + str(current) + '/scripts/' + str(script)
                 if sys.argv[1] == 'search':
-                    print result
+                    print(result)
                 return result
-    print str(name) + ' not found.'
+    print(str(name) + ' not found.')
     return False
 
 
