@@ -12,59 +12,37 @@ import platform
 
 BINARY = '/usr/bin/liman'
 DATA_FOLDER = '/usr/local/share/liman/'
-VERSION = 'Alpha 0.3'
+VERSION = 'Alpha 0.4'
 
 
 def main():
-    """
-        Main handler for liman.
-    """
-    commandlist = {'list': [scriptslist, 'List of scripts in all repositories.'],
-                   'repos': [repositories, 'List of repositories.'],
-                   'log': [log, 'Logs of liman.'],
-                   'search': [search, 'Search recursively in all repositories'],
-                   'update': [update, 'Update specific repository by name.'],
-                   'add': [add, 'Add new repository to the liman.'],
-                   'remove-repository': [remove_repository,
-                                         'Remove installed repository from liman.'],
-                   'remove': [remove, 'Remove installed scripts.'],
-                   'install': [install, 'Install new script to the system.'],
-                   'installed': [installed, 'List of installed scripts in the system.'],
-                   'integrity': [integrity, 'Check and fix problems with liman itself.']}
-    argc = len(sys.argv)
-    if not argc > 1:
-        helpmenu()
-        sys.exit('Usage: liman <command> [command argument]')
-    command = sys.argv[1]
-    if command not in commandlist:
-        helpmenu()
-        sys.exit('Command not found!')
-    if argc > 2:
-        name = sys.argv[2].replace('/', '#')
-        commandlist[sys.argv[1]][0](name)
-    else:
-        commandlist[sys.argv[1]][0]()
-
-
-def helpmenu():
     '''
-        Display the help ( commands ) of the liman.
+        Main of liman.
     '''
-    commandlist = {'list': [scriptslist, 'List of scripts in all repositories.'],
-                   'repos': [repositories, 'List of repositories.'],
-                   'log': [log, 'Logs of liman.'],
-                   'search': [search, 'Search recursively in all repositories'],
-                   'update': [update, 'Update specific repository by name.'],
-                   'add': [add, 'Add new repository to the liman.'],
-                   'remove-repository': [remove_repository,
-                                         'Remove installed repository from liman.'],
-                   'remove': [remove, 'Remove installed scripts.'],
-                   'install': [install, 'Install new script to the system.'],
-                   'installed': [installed, 'List of installed scripts in the system.'],
-                   'integrity': [integrity, 'Check and fix problems with liman itself.']}
-    for command in commandlist:
-        print(command + '\t\t' + commandlist[str(command)][1])
-
+    # List style > name : [function name, description, required paramater count]
+    parameter_list = {'list': [scriptslist, 'List of scripts in all repositories.', 0],
+                      'repos': [repositories, 'List of repositories.', 0],
+                      'log': [log, 'Logs of liman.', 0],
+                      'search': [search, 'Search recursively in all repositories', 1],
+                      'update': [update, 'Update specific repository by name.', 1],
+                      'add': [add, 'Add new repository to the liman.', 1],
+                      'remove-repository': [remove_repository,
+                                            'Remove installed repository from liman.', 1],
+                      'remove': [remove, 'Remove installed scripts.', 1],
+                      'install': [install, 'Install new script to the system.', 1],
+                      'installed': [installed, 'List of installed scripts in the system.', 0],
+                      'integrity': [integrity, 'Check and fix problems with liman itself.', 0]}
+    # First, check if first parameter is in list or not.
+    param = sys.argv[1]
+    if not param in parameter_list:
+        print('Usage: liman <action> [parameter]')
+        sys.exit(sys.argv[1] + ' is not available in liman.')
+    # Let's check if action needs more parameter and quit if there's not enough input.
+    required_paramaters = parameter_list[param][2]
+    if required_paramaters != len(sys.argv) -2:
+        sys.exit(param + ' requires ' + str(required_paramaters) + ' parameter to work.')
+    # Finally, execute the task.
+    parameter_list[param][0]()
 
 def log():
     """
@@ -79,7 +57,6 @@ def root():
     """
     if not os.geteuid() == 0:
         sys.exit('Root is required for this action.')
-
 
 def permission():
     """
@@ -109,6 +86,8 @@ def integrity():
             os.system('git')
         else:
             os.system('apt-get install git')
+            os.system('yum install git')
+            os.system('pacman -S git')
     # Lastly, check if liman data folder exist.
     if not os.path.isdir(DATA_FOLDER):
         os.mkdir(DATA_FOLDER)
