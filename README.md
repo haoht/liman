@@ -41,3 +41,5 @@ $ sudo liman add liman/ldepo
 ```
 
 ## License
+
+MIT - https://mit-license.org/
