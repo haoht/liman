@@ -13,12 +13,14 @@ import platform
 BINARY = '/usr/bin/liman'
 DATA_FOLDER = '/usr/local/share/liman/'
 VERSION = 'Alpha 0.4'
-
+OS_TYPE = ''
+ARCH = ''
 
 def main():
     '''
         Main of liman.
     '''
+    # platform.platform()
     # List style > name : [function name, description, required paramater count]
     parameter_list = {'list': [scriptslist, 'List of scripts in all repositories.', 0],
                       'repos': [repositories, 'List of repositories.', 0],
@@ -31,8 +33,13 @@ def main():
                       'remove': [remove, 'Remove installed scripts.', 1],
                       'install': [install, 'Install new script to the system.', 1],
                       'installed': [installed, 'List of installed scripts in the system.', 0],
-                      'integrity': [integrity, 'Check and fix problems with liman itself.', 0]}
-    # First, check if first parameter is in list or not.
+                      'integrity': [integrity, 'Check and fix problems with liman itself.', 0],
+                      'version' : [version,'Display the version of liman',0],
+                      'run' : [run,'Run script directly',1]}
+    # First, check if there's any parameter or not.
+    if len(sys.argv) == 1:
+        sys.exit('Usage: liman <action> [parameter]')
+    # Secondly, check if first parameter is in list or not.
     param = sys.argv[1]
     if not param in parameter_list:
         print('Usage: liman <action> [parameter]')
@@ -42,19 +49,23 @@ def main():
     if required_paramaters != len(sys.argv) -2:
         sys.exit(param + ' requires ' + str(required_paramaters) + ' parameter to work.')
     # Finally, execute the task.
+
     parameter_list[param][0]()
 
 def log():
     """
         Displaying log file of the liman.
     """
+    # Display version and log file under data folder.
+    print('Liman ' + VERSION + ' logs\n*****************')
     os.system('cat ' + DATA_FOLDER + 'log')
-
+    sys.exit()
 
 def root():
     """
         Check if program run as root.
     """
+    # We can simply check if script run as root by UID
     if not os.geteuid() == 0:
         sys.exit('Root is required for this action.')
 
@@ -78,7 +89,7 @@ def integrity():
     # Check if liman has run permission
     if not os.access(BINARY, os.X_OK):
         print('Fixing liman\' run permission')
-        os.chmod('/usr/bin/liman', 733)
+        os.chmod('/usr/bin/liman', 533)
     # Check if git installed or not.
     if not os.path.isfile('/usr/bin/git'):
         print('Git not found, installing...')
@@ -110,26 +121,24 @@ def details(name, index):
         return 'Don\'t have any detail'
 
 
-def add(name):
+def add():
     """
         Add new repository
     """
+    name = sys.argv[1]
     root()
     # Creating repository folder with right permissions
     if not os.path.isfile(DATA_FOLDER + 'repos/' + name):
         os.system('mkdir -p ' + DATA_FOLDER + 'repos/' + name)
         os.chdir(DATA_FOLDER + 'repos/' + name)
-
     # Initializing git and enabling sparse checkout
     print('Adding repository...')
     os.system('git init >> ' + DATA_FOLDER + 'log && git remote add origin https://github.com/'
               + str(name.replace('#', '/')) + '.git >> ' + DATA_FOLDER +'log')
     os.system('echo \'scripts/*\' >> .git/info/sparse-checkout' +
               '&& git config core.sparsecheckout true ')
-
     # Finally update
     update(name)
-
 
 def update(name):
     """
@@ -152,19 +161,18 @@ def update(name):
             os.system('chmod -R o=rx ' + DATA_FOLDER + 'repos/' + str(current) + '/scripts/*')
             if not os.path.isdir(DATA_FOLDER + 'repos/' + str(current) + '/scripts'):
                 print('Invalid repository, deleting now.')
-                remove_repository(name)
+                remove_repository()
             else:
                 print(str(current) + ' updated!')
                 permission()
 
 
-def remove_repository(name):
+def remove_repository():
     """
         Delete repository by simply deleting it's folder
     """
     root()
-    if name == '':
-        sys.exit('You must write repository name')
+    name = sys.argv[2]
     name = name.replace('/', '#')
     shutil.rmtree(DATA_FOLDER + 'repos/' + str(name))
     print(str(name) + ' removed!')
@@ -258,11 +266,24 @@ def search(name):
         for script in scripts:
             if script in name:
                 result = DATA_FOLDER + 'repos/' + str(current) + '/scripts/' + str(script)
-                if sys.argv[1] == 'search':
-                    print(result)
                 return result
     print(str(name) + ' not found.')
-    return False
+    return ''
 
+def version():
+    """
+        Display the version of Liman
+    """
+    # Display the version and exit.
+    sys.exit('Current liman version : ' + VERSION)
+
+def run():
+    """
+        Run the script without installing it.
+    """
+    # Assuming system has bash installed TODO implement zsh and others.
+    location = search(sys.argv[2])
+    if location != '':
+        os.system('bash ' + location)
 
 main()
