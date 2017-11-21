@@ -34,6 +34,7 @@ if [ "$(which git)" == "" ]; then
     echo "Git is mandatory for liman, installing now."
     #Installing git
     if [ "$isLinux" = true ]; then
+        apt update
         apt-get -y install git
     else
         git
