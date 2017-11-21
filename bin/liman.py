@@ -125,7 +125,7 @@ def add():
     """
         Add new repository
     """
-    name = sys.argv[1]
+    name = sys.argv[2]
     root()
     # Creating repository folder with right permissions
     if not os.path.isfile(DATA_FOLDER + 'repos/' + name):
